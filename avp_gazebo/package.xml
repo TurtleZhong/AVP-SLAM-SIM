@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>avp_gazebo</name>
+  <version>1.0.0</version>
+  <description>This package provides launch files for Gazebo simulation needed to test the avp_bev package</description>
+
+
+  <maintainer email="xinliangzhong@foxmail.com">Hassan Umari</maintainer>
+
+
+  <license>MIT</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+
+
+<export>
+</export>
+
+</package>

@@ -1,0 +1,516 @@
+<?xml version="1.0" ?>
+<!-- 
+  This is not a standalone urdf for kobuki. It simply defines the 'kobuki' tag that can
+  be incorporated by other urdf files (e.g. turtlebot).
+  
+  See kobuki_standalone.urdf.xacro for a standalone urdf to be tested with
+      kobuki_description/launch/view_model.launch
+ -->
+<robot name="kobuki" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find avp_gazebo)/launch/includes/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find avp_gazebo)/launch/includes/urdf/kobuki_gazebo.urdf.xacro"/>
+
+  <!-- <xacro:arg name="gpu" default="false"/>
+  <xacro:property name="gpu" value="$(arg gpu)" />
+  <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+  <VLP-16 parent="base_link" name="velodyne" topic="/velodyne_points" hz="10" samples="440" gpu="${gpu}">
+    <origin xyz="0 0 0.5" rpy="0 0 0" />
+  </VLP-16> -->
+
+  <!-- <xacro:arg name="realsense_mount" default="sensor_arch_mount_link" /> -->
+  <!-- <xacro:include filename="$(find avp_gazebo)/launch/includes/urdf/intel_realsense.urdf.xacro"/> -->
+
+  <!-- <xacro:if value="true">
+    <link name="realsense_mountpoint"/>
+    <joint name="realsense_mountpoint_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 -3.14159" />
+      <parent link="$(arg realsense_mount)"/>
+      <child link="realsense_mountpoint" />
+    </joint>
+    <xacro:intel_realsense_mount prefix="camera" topic="realsense" parent_link="realsense_mountpoint"/>
+  </xacro:if> -->
+
+
+  
+
+  <!-- Kobuki --> 
+  <xacro:macro name="kobuki">   
+    <link name="base_footprint"/>
+    <!--
+       Base link is set at the bottom of the base mould.
+       This is done to be compatible with the way base link
+       was configured for turtlebot 1. Refer to
+       
+       https://github.com/turtlebot/turtlebot/issues/40
+       
+       To put the base link at the more oft used wheel
+       axis, set the z-distance from the base_footprint
+       to 0.352.
+      -->
+    <joint name="base_joint" type="fixed">
+      <origin xyz="0 0 0.0102" rpy="0 0 0" />
+      <parent link="base_footprint"/>
+      <child link="base_link" />
+    </joint>
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <!-- new mesh -->
+          <mesh filename="package://avp_gazebo/launch/includes/meshes/main_body.dae" />
+        </geometry>
+        <origin xyz="0.001 0 0.05199" rpy="0 0 0"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder length="0.10938" radius="0.178"/>
+        </geometry>
+        <origin xyz="0.0 0 0.05949" rpy="0 0 0"/>
+      </collision>
+      <inertial>
+        <!-- COM experimentally determined -->
+        <origin xyz="0.01 0 0"/>
+        <mass value="2.4"/> <!-- 2.4/2.6 kg for small/big battery pack -->
+        <!-- Kobuki's inertia tensor is approximated by a cylinder with homogeneous mass distribution
+             More details: http://en.wikipedia.org/wiki/List_of_moment_of_inertia_tensors
+             m = 2.4 kg; h = 0.09 m; r = 0.175 m
+             ixx = 1/12 * m * (3 * r^2 + h^2)
+             iyy = 1/12 * m * (3 * r^2 + h^2)
+             izz = 1/2 * m * r^2 
+          -->
+        <inertia ixx="0.019995" ixy="0.0" ixz="0.0"
+                 iyy="0.019995" iyz="0.0" 
+                 izz="0.03675" />
+      </inertial>
+    </link>
+    
+    <joint name="wheel_left_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="wheel_left_link"/>
+      <origin xyz="0.00 ${0.23/2} 0.0250" rpy="${-M_PI/2} 0 0"/>
+      <axis xyz="0 0 1"/>
+    </joint>
+    <link name="wheel_left_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://avp_gazebo/launch/includes/meshes/wheel.dae"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder length="0.0206" radius="0.0352"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                 iyy="0.001" iyz="0.0" 
+                 izz="0.001" />
+      </inertial>
+    </link>
+    
+    <joint name="wheel_right_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="wheel_right_link"/>
+      <origin xyz="0.00 -${0.23/2} 0.0250" rpy="${-M_PI/2} 0 0"/>
+      <axis xyz="0 0 1"/>
+    </joint>
+    <link name="wheel_right_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://avp_gazebo/launch/includes/meshes/wheel.dae"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder length="0.0206" radius="0.0350"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                 iyy="0.001" iyz="0.0" 
+                 izz="0.001" />
+      </inertial>
+    </link>
+    
+    <joint name="caster_front_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="caster_front_link"/>
+      <origin xyz="0.115 0.0 0.007" rpy="${-M_PI/2} 0 0"/>
+    </joint>
+    <link name="caster_front_link">
+      <collision>
+        <geometry>
+          <cylinder length="0.0176" radius="0.017"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>      
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                 iyy="0.001" iyz="0.0" 
+                 izz="0.001" />
+      </inertial>
+    </link>
+    
+    <joint name="caster_back_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="caster_back_link"/>
+      <origin xyz="-0.135 0.0 0.009" rpy="${-M_PI/2} 0 0"/>
+    </joint>
+    <link name="caster_back_link">
+      <collision>
+        <geometry>
+          <cylinder length="0.0176" radius="0.017"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>      
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                 iyy="0.001" iyz="0.0" 
+                 izz="0.001" />
+      </inertial>
+    </link>
+    
+    <!-- Kobuki's sensors -->
+    <joint name="gyro_joint" type="fixed">
+      <axis xyz="0 1 0"/>
+      <origin xyz="0.056 0.062 0.0202" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="gyro_link"/>
+    </joint>
+    <link name="gyro_link">
+      <inertial>
+        <mass value="0.001"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="0.0001" ixy="0" ixz="0" 
+                 iyy="0.000001" iyz="0"
+                 izz="0.0001"/>
+      </inertial>
+    </link>
+
+    <joint name="cliff_sensor_left_joint" type="fixed">
+      <origin xyz="0.08734 0.13601 0.0214" rpy="0 ${M_PI/2} 0" />
+      <parent link="base_link"/>
+      <child link="cliff_sensor_left_link" />
+    </joint>
+    <link name="cliff_sensor_left_link">
+      <inertial>
+        <mass value="0.0001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+                 iyy="0.0001" iyz="0.0" 
+                 izz="0.0001" />
+      </inertial>
+    </link>
+
+    <joint name="cliff_sensor_right_joint" type="fixed">
+      <origin xyz="0.085 -0.13601 0.0214" rpy="0 ${M_PI/2} 0" />
+      <parent link="base_link"/>
+      <child link="cliff_sensor_right_link" />
+    </joint>
+    <link name="cliff_sensor_right_link">
+      <inertial>
+        <mass value="0.0001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+                 iyy="0.0001" iyz="0.0" 
+                 izz="0.0001" />
+      </inertial>
+    </link>
+    
+    <joint name="cliff_sensor_front_joint" type="fixed">
+      <origin xyz="0.156 0.00 0.0214" rpy="0 ${M_PI/2} 0" />
+      <parent link="base_link"/>
+      <child link="cliff_sensor_front_link" />
+    </joint>
+    <link name="cliff_sensor_front_link">
+      <inertial>
+        <mass value="0.0001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+                 iyy="0.0001" iyz="0.0" 
+                 izz="0.0001" />
+      </inertial>
+    </link>
+    
+
+
+    <joint name="laser_joint" type="fixed">
+    <origin xyz=".115 0 0.12" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="base_laser_link" />
+    </joint>
+
+
+    <link name="base_laser_link"> 
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+    <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://avp_gazebo/launch/includes/meshes/hokuyo.dae"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+   </link>
+
+   <link name="camera_link">
+		<visual>
+		  <origin xyz=" 0 0 0 " rpy="0 0 0" />
+		  <geometry>
+			<sphere radius="0.01" />
+		  </geometry>
+		  <material name="black">
+			<color rgba="0 0 0 0.95"/>
+		  </material>
+		</visual>
+	  </link>
+	
+	  <joint name="camera_joint" type="fixed">
+      <origin xyz="0.00 0 0.5" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="camera_link"/>
+    </joint>
+    
+    <link name="depth_link" />
+    <joint name="camera_depth_joint" type="fixed">
+      <parent link="camera_link"/>
+      <child link="depth_link"/>
+      <origin xyz="0.0 0 0" rpy="-1.5707963267948966 0 -1.5707963267948966"/>
+    </joint>
+
+     
+<!-- front -->
+    <!-- <link name="front_link">
+      <visual>
+        <origin xyz=" 0 0 0 " rpy="0 0 0" />
+        <geometry>
+        <sphere radius="0.01" />
+        </geometry>
+        <material name="black">
+        <color rgba="0 0 0 0.95"/>
+        </material>
+      </visual>
+      </link>
+
+      <joint name="front_joint" type="fixed">
+        <origin xyz="0.00 0 1.2" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="front_link"/>
+      </joint>
+
+      <link name="depth_link1" />
+      <joint name="camera_depth_joint1" type="fixed">
+        <parent link="front_link"/>
+        <child link="depth_link1"/>
+        <origin xyz="0.0 0 0" rpy="-1.5707963267948966 0 -1.5707963267948966"/>
+      </joint> -->
+
+      <!-- right -->
+    <!-- <link name="right_link">
+      <visual>
+        <origin xyz=" 0 0 0 " rpy="0 0 0" />
+        <geometry>
+        <sphere radius="0.01" />
+        </geometry>
+        <material name="black">
+        <color rgba="0 0 0 0.95"/>
+        </material>
+      </visual>
+      </link>
+
+      <joint name="right_joint" type="fixed">
+        <origin xyz="0.00 0 1.2" rpy="0 0 -1.5707963267948966"/>
+        <parent link="base_link"/>
+        <child link="right_link"/>
+      </joint> -->
+
+            <!-- left -->
+    <!-- <link name="left_link">
+      <visual>
+        <origin xyz=" 0 0 0 " rpy="0 0 0" />
+        <geometry>
+        <sphere radius="0.01" />
+        </geometry>
+        <material name="black">
+        <color rgba="0 0 0 0.95"/>
+        </material>
+      </visual>
+      </link>
+
+      <joint name="left_joint" type="fixed">
+        <origin xyz="0.00 0 1.2" rpy="0 0 1.5707963267948966"/>
+        <parent link="base_link"/>
+        <child link="left_link"/>
+      </joint> -->
+
+            <!-- rear -->
+    <!-- <link name="rear_link">
+      <visual>
+        <origin xyz=" 0 0 0 " rpy="0 0 0" />
+        <geometry>
+        <sphere radius="0.01" />
+        </geometry>
+        <material name="black">
+        <color rgba="0 0 0 0.95"/>
+        </material>
+      </visual>
+      </link>
+
+      <joint name="rear_joint" type="fixed">
+        <origin xyz="0.00 0 1.2" rpy="0 0 3.1415"/>
+        <parent link="base_link"/>
+        <child link="rear_link"/>
+      </joint> -->
+
+
+      <!-- we us 6 camera to sim. -->
+
+      <link name="camera0_link">
+        <visual>
+          <origin xyz=" 0 0 0 " rpy="0 0 0" />
+          <geometry>
+          <sphere radius="0.01" />
+          </geometry>
+          <material name="black">
+          <color rgba="0 0 0 0.95"/>
+          </material>
+        </visual>
+        </link>
+  
+        <joint name="camera0_joint" type="fixed">
+          <origin xyz="0.00 0 1.2" rpy="0 0 0"/>
+          <parent link="base_link"/>
+          <child link="camera0_link"/>
+        </joint> 
+      
+      <link name="camera1_link">
+      <visual>
+        <origin xyz=" 0 0 0 " rpy="0 0 0" />
+        <geometry>
+        <sphere radius="0.01" />
+        </geometry>
+        <material name="black">
+        <color rgba="0 0 0 0.95"/>
+        </material>
+      </visual>
+      </link>
+
+      <joint name="camera1_joint" type="fixed">
+        <origin xyz="0.00 0 1.2" rpy="0 0 1.0471975511965976"/>
+        <parent link="base_link"/>
+        <child link="camera1_link"/>
+      </joint> 
+
+
+      <link name="camera2_link">
+        <visual>
+          <origin xyz=" 0 0 0 " rpy="0 0 0" />
+          <geometry>
+          <sphere radius="0.01" />
+          </geometry>
+          <material name="black">
+          <color rgba="0 0 0 0.95"/>
+          </material>
+        </visual>
+        </link>
+  
+        <joint name="camera2_joint" type="fixed">
+          <origin xyz="0.00 0 1.2" rpy="0 0 2.0943951023931953"/>
+          <parent link="base_link"/>
+          <child link="camera2_link"/>
+        </joint>
+
+        <link name="camera3_link">
+          <visual>
+            <origin xyz=" 0 0 0 " rpy="0 0 0" />
+            <geometry>
+            <sphere radius="0.01" />
+            </geometry>
+            <material name="black">
+            <color rgba="0 0 0 0.95"/>
+            </material>
+          </visual>
+          </link>
+    
+          <joint name="camera3_joint" type="fixed">
+            <origin xyz="0.00 0 1.2" rpy="0 0 3.141592653589793"/>
+            <parent link="base_link"/>
+            <child link="camera3_link"/>
+          </joint> 
+
+          <link name="camera4_link">
+            <visual>
+              <origin xyz=" 0 0 0 " rpy="0 0 0" />
+              <geometry>
+              <sphere radius="0.01" />
+              </geometry>
+              <material name="black">
+              <color rgba="0 0 0 0.95"/>
+              </material>
+            </visual>
+            </link>
+      
+            <joint name="camera4_joint" type="fixed">
+              <origin xyz="0.00 0 1.2" rpy="0 0 -2.0943951023931953"/>
+              <parent link="base_link"/>
+              <child link="camera4_link"/>
+            </joint> 
+
+
+            <link name="camera5_link">
+              <visual>
+                <origin xyz=" 0 0 0 " rpy="0 0 0" />
+                <geometry>
+                <sphere radius="0.01" />
+                </geometry>
+                <material name="black">
+                <color rgba="0 0 0 0.95"/>
+                </material>
+              </visual>
+              </link>
+        
+              <joint name="camera5_joint" type="fixed">
+                <origin xyz="0.00 0 1.2" rpy="0 0 -1.0471975511965976 "/>
+                <parent link="base_link"/>
+                <child link="camera5_link"/>
+              </joint> 
+          
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Kobuki Gazebo simulation details -->
+    <kobuki_sim/>
+    
+  </xacro:macro>
+</robot>

@@ -1,0 +1,31 @@
+#This file contains common configuration options for the two costmaps used in the navigation stack for more details on the parameters in this file, and a full list of the parameters used by the costmaps, please see http://www.ros.org/wiki/costmap_2d
+
+#For this example we'll configure the costmap in voxel-grid mode
+map_type: costmap
+
+
+
+#Set the tolerance we're willing to have for tf transforms
+transform_tolerance: 2.0
+obstacle_range: 3.5
+raytrace_range: 4.0
+
+footprint: [[-0.127, -0.127], [-0.18, 0.0], [-0.127, 0.127], [0.0, 0.18], [0.127, 0.127], [0.18, 0.0], [0.127, -0.127], [0.0, -0.18]]
+#robot_radius: 0.18
+
+
+footprint_padding: 0.03
+
+#Cost function parameters
+inflation_radius: 0.2
+cost_scaling_factor: 10.0
+
+#The cost at which a cell is considered an obstacle when a map is read from the map_server
+lethal_cost_threshold: 100
+
+
+#Configuration for the sensors that the costmap will use to update a map
+observation_sources: laser_scan_sensor
+laser_scan_sensor: {sensor_frame: base_laser_link, data_type: LaserScan, topic: /base_scan, marking: true, clearing: true, max_obstacle_height: 20.0, min_obstacle_height: 0.0}
+
+

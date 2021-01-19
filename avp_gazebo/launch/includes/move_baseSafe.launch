@@ -1,0 +1,74 @@
+<!-- move base -->
+<launch>
+  <master auto="start"/>
+
+  <arg name="namespace"/>
+
+
+<param name="use_sim_time" value="true" />
+
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen" >
+      <remap from="scan" to="base_scan"/>
+      <param name="map_frame" value="$(arg namespace)/map"/>
+      <param name="odom_frame" value="$(arg namespace)/odom"/>
+      <param name="base_frame" value="$(arg namespace)/base_link"/>
+      <param name="map_update_interval" value="2.0"/>
+      <param name="maxUrange" value="50.0"/>
+      <param name="maxRange" value="50.0"/>
+      <param name="sigma" value="0.05"/>
+      <param name="kernelSize" value="1"/>
+      <param name="lstep" value="0.05"/>
+      <param name="astep" value="0.05"/>
+      <param name="iterations" value="5"/>
+      <param name="lsigma" value="0.075"/>
+      <param name="ogain" value="3.0"/>
+      <param name="lskip" value="0"/>
+      <param name="srr" value="0.01"/>
+      <param name="srt" value="0.02"/>
+      <param name="str" value="0.01"/>
+      <param name="stt" value="0.02"/>
+      <param name="linearUpdate" value="0.01"/>
+      <param name="angularUpdate" value="0.01"/>
+      <param name="temporalUpdate" value="0.1"/>
+      <param name="resampleThreshold" value="0.5"/>
+      <param name="particles" value="30"/>
+      <param name="xmin" value="-5.0"/>
+      <param name="ymin" value="-5.0"/>
+      <param name="xmax" value="5.0"/>
+      <param name="ymax" value="5.0"/>
+      <param name="delta" value="0.1"/>
+      <param name="llsamplerange" value="0.01"/>
+      <param name="llsamplestep" value="0.01"/>
+      <param name="lasamplerange" value="0.005"/>
+      <param name="lasamplestep" value="0.005"/>
+      <param name="minimumScore" value="0.005"/>
+    </node>
+
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+    <param name="footprint_padding" value="0.01" />
+    <param name="controller_frequency" value="5.0" />
+    <param name="controller_patience" value="3.0" />
+    <param name="oscillation_timeout" value="30.0" />
+    <param name="oscillation_distance" value="0.5" />
+    <param name="planner_patience" value="1" />
+    <param name="controller_patience" value="1" /> 
+    <remap from="cmd_vel" to="mobile_base/commands/velocity"/>
+    <param name="recovery_behavior_enabled" value="false" />
+    <rosparam file="$(find avp_gazebo)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find avp_gazebo)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find avp_gazebo)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find avp_gazebo)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find avp_gazebo)/param/base_local_planner_params.yaml" command="load" />  
+    <param name="global_costmap/global_frame" value="$(arg namespace)/map"/>
+    <param name="global_costmap/robot_base_frame" value="$(arg namespace)/base_link"/>
+    <param name="global_costmap/laser_scan_sensor/sensor_frame" value="/$(arg namespace)/base_laser_link"/>
+    <param name="global_costmap/laser_scan_sensor/topic" value="/$(arg namespace)/base_scan"/>    
+    <param name="local_costmap/global_frame" value="$(arg namespace)/odom"/>
+    <param name="local_costmap/robot_base_frame" value="$(arg namespace)/base_link"/>
+    <param name="local_costmap/laser_scan_sensor/sensor_frame" value="$(arg namespace)/base_laser_link"/>
+    <param name="local_costmap/laser_scan_sensor/topic" value="/$(arg namespace)/base_scan"/>
+    <param name="local_costmap/obstacle_layer/laser_scan_sensor/topic" value="/$(arg namespace)/base_scan"/>
+  </node>
+
+</launch>
