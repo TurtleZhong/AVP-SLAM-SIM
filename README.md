@@ -36,7 +36,8 @@ A basic implementation of [AVP-SLAM: Semantic Visual Mapping and Localization fo
     <li>
       <a href="#about-the-project">About The Project</a>
     </li>
-    <li><a href="#How to run">How to run</a></li>
+    <li><a href="#codestructure">CodeStructure</a></li>
+    <li><a href="#how to run">How to run</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -57,6 +58,17 @@ A basic implementation of [AVP-SLAM: Semantic Visual Mapping and Localization fo
 
 &emsp;&emsp; This project is only my implementation of the Paper, **not official release** , we only release our simulation codes. **`Other Code will be released soon`**
 
+<!-- CodeStructure -->
+### CodeStructure
+&emsp;&emsp;We release our basic code structure, for the whole project, you need at least `calib`,`segmentation`,[avp-bev](https://github.com/TurtleZhong/avp-bev-open),`sync part` etc. [avp-bev](https://github.com/TurtleZhong/avp-bev-open) is one of the core parts of this project, The struct show in the figure:
+
+<p align="center">
+  <a href="(https://arxiv.org/abs/2007.01813)">
+    <img src="images/code-structure-2.png" alt="[Logo]" width="100%">
+  </a>
+</p>
+
+&emsp;&emsp;If you are intrested in this project, you can follow the `***.h` files to relize your implementation.
 
 ### How to run
 
