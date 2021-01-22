@@ -4,7 +4,7 @@
 <include file="$(find gazebo_ros)/launch/empty_world.launch">
 <arg name="use_sim_time" value="true"/>
 <arg name="debug" value="false"/>
-<arg name="world_name" value="$(find avp_gazebo)/launch/includes/worlds/under_ground.world"/>
+<arg name="world_name" value="$(find avp_gazebo)/launch/includes/worlds/under_ground_simple.world"/>
 </include>
 
 <group ns="/robot_1">

@@ -74,9 +74,14 @@ A basic implementation of [AVP-SLAM: Semantic Visual Mapping and Localization fo
 
 &emsp;&emsp; This project provide a gazebo world. so if you wanna test the code, you need prepare the simulation world.
 
+&emsp;&emsp; This project need a gazebo environment, Usually loading the gazebo models takes long time, so we need to download the models first and put them in `~/.gazebo/models/`.
+
+Follow this [link](https://blog.csdn.net/qq_36170626/article/details/90417359),Download the models from [BaiDu YUN](http://pan.baidu.com/s/1pKaeg0F), The extract code `cmxc`, and unzip them in `~/.gazebo/models/`. or you can Download the models [Google Drive LINK](https://drive.google.com/file/d/12ZZ0X_twp29xiYeABAQbcJKaVh0e01c3/view?usp=sharing).
+
 ```bash
 mkdir -p ~/catkin_ws/src && cd catkin_ws/src
 git clone https://github.com/TurtleZhong/AVP-SLAM-SIM.git
+cd gazebo_files/
 unzip my_ground_plane.zip -d ~/.gazebo/models/
 
 cd ../
