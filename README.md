@@ -38,6 +38,7 @@ A basic implementation of [AVP-SLAM: Semantic Visual Mapping and Localization fo
     </li>
     <li><a href="#codestructure">CodeStructure</a></li>
     <li><a href="#how to run">How to run</a></li>
+    <li><a href="#DockerENV">How to run</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -78,6 +79,8 @@ A basic implementation of [AVP-SLAM: Semantic Visual Mapping and Localization fo
 
 Follow this [link](https://blog.csdn.net/qq_36170626/article/details/90417359),Download the models from [BaiDu YUN](http://pan.baidu.com/s/1pKaeg0F), The extract code `cmxc`, and unzip them in `~/.gazebo/models/`. or you can Download the models [Google Drive LINK](https://drive.google.com/file/d/12ZZ0X_twp29xiYeABAQbcJKaVh0e01c3/view?usp=sharing).
 
+
+
 ```bash
 mkdir -p ~/catkin_ws/src && cd catkin_ws/src
 git clone https://github.com/TurtleZhong/AVP-SLAM-SIM.git
@@ -92,6 +95,25 @@ catkin build
 source devel/setup.bash
 roslaunch avp_gazebo single_simulated_avp.launch
 ```
+
+#### Ubuntu 16.04
+```bash
+sudo apt-get install ros-kinetic-gmapping ros-kinetic-navigation
+sudo apt-get install ros-kinetic-kobuki ros-kinetic-kobuki-core ros-kinetic-kobuki-gazebo
+``` 
+
+#### Ubuntu 18.04
+```bash
+sudo apt-get install ros-melodic-kobuki-*
+cd ~/catkin_ws/src
+git clone https://github.com/yujinrobot/kobuki_desktop.git
+catkin build
+```
+
+Acyually If you test the code fail in your env(ubuntu 18.04), I recomend you use Ubuntu 16.04 for test and I will provide A [DOCKER ENV - TODO]()
+
+### DockerENV
+
 
 If everything is OK, you will get this:
 <p align="center">
