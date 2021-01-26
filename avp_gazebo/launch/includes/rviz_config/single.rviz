@@ -24,7 +24,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: vlp16-2dscan
+    SyncSource: cam0
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
@@ -101,10 +101,6 @@ Visualization Manager:
           Value: true
         robot_1/odom:
           Value: false
-        robot_1/velodyne:
-          Value: true
-        robot_1/velodyne_base_link:
-          Value: true
         robot_1/wheel_left_link:
           Value: true
         robot_1/wheel_right_link:
@@ -149,9 +145,6 @@ Visualization Manager:
                     {}
                   robot_1/gyro_link:
                     {}
-                  robot_1/velodyne_base_link:
-                    robot_1/velodyne:
-                      {}
                   robot_1/wheel_left_link:
                     {}
                   robot_1/wheel_right_link:
@@ -445,18 +438,6 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-    - Class: octomap_rviz_plugin/OccupancyGrid
-      Enabled: true
-      Max. Height Display: 3.40282347e+38
-      Max. Octree Depth: 16
-      Min. Height Display: -3.40282347e+38
-      Name: OccupancyGrid
-      Octomap Topic: /octomap_full
-      Queue Size: 5
-      Value: true
-      Voxel Alpha: 1
-      Voxel Coloring: Z-Axis
-      Voxel Rendering: Occupied Voxels
     - Class: rviz/Image
       Enabled: true
       Image Topic: /robot_1/camera0/color/image_raw
